@@ -30,7 +30,6 @@ def get_from_github(http: PoolManager, *, name: str, id: str, owner: str, repo: 
         "passthru": {
             "id": id,
             "alias": name,
-            "file": file,
         },
     }
 

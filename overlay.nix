@@ -7,9 +7,8 @@ final: prev:
 let
   inherit (final) lib fetchurl;
 
-  mkAddonPackage = addon: fetchurl {
-    # name = "${addon.alias}-${addon.version}.xpi";
-    pname = addon.name;
+  mkAddonPackage = pname: addon: fetchurl {
+    inherit pname;
     inherit (addon) version;
     inherit (addon.file) url hash;
     passthru = {
@@ -18,8 +17,8 @@ let
   };
 
   addonsForProduct = product: let
-    addons = lib.attrValues (lib.importJSON "${data}/${product}.json");
-  in lib.mapAttrValues (name: mkAddonPackage) addons;
+    addons = lib.importJSON "${data}/${product}.json";
+  in lib.mapAttrs (mkAddonPackage) addons;
 in
 
 {
