@@ -1,0 +1,31 @@
+name: "Update addons"
+on:
+  push:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    name: "Update addons"
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+
+      - name: "Update addons"
+        run: |
+          python3 update.py
+          git stash -u
+          git checkout data
+          git stash pop
+
+      - uses: EndBug/add-and-commit@v9
+        with: { default_author: github_actions }
