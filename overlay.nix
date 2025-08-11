@@ -15,8 +15,8 @@ let
     passthru = addon.file;
   };
 
-  addonsForProduct = path: let
-    addons = lib.importJSON "${data}/${product}.json";
+  addonsForProduct = product: let
+    addons = lib.importJSON "${data}/addons/${product}.json";
     mkAddonPackages = addon: let
       package = mkAddonPackage addon;
     in [

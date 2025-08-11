@@ -3,7 +3,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
 
     data = {
-      url = "github:andre4ik3/nix-mozilla-addons";
+      url = "github:andre4ik3/nix-mozilla-addons/data";
       flake = false;
     };
   };
@@ -13,7 +13,7 @@
     devSystems = [ "aarch64-darwin" "aarch64-linux" "x86_64-darwin" "x86_64-linux" ];
   in {
     overlays = rec {
-      mozilla-addons = import ./overlay.nix;
+      mozilla-addons = import ./overlay.nix data;
       default = mozilla-addons;
     };
 

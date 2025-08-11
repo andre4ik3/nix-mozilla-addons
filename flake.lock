@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "data": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1754924542,
+        "narHash": "sha256-8L7zVHgx2xnCw2fU1mxsUWl5RnzA87wsDK+QpMyX9yA=",
+        "owner": "andre4ik3",
+        "repo": "nix-mozilla-addons",
+        "rev": "81d06f0c55ce8e6953a83abf2a1a996466e7e69a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "andre4ik3",
+        "ref": "data",
+        "repo": "nix-mozilla-addons",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1754863774,
@@ -18,6 +35,7 @@
     },
     "root": {
       "inputs": {
+        "data": "data",
         "nixpkgs": "nixpkgs"
       }
     }

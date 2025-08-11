@@ -20,8 +20,12 @@ jobs:
         with:
           python-version: 3.13
 
+      - name: "Install dependencies"
+        run: pip3 install json5 urllib3
+
       - name: "Update addons"
         run: |
+          mkdir addons
           python3 update.py
           git stash -u
           git checkout data
