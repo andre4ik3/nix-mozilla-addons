@@ -32,5 +32,11 @@
   ],
   "thunderbird": [
     "ImportExportToolsNG@cleidigh.kokkini.net", // ImportExportTools NG
-  ]
+  ],
+  "zotero": [
+    /**
+     * This is a placeholder, as Zotero does not have its own addons store.
+     * Addons must be defined manually in `updater/extras.py`.
+     */
+  ],
 }

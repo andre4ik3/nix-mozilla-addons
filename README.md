@@ -21,9 +21,11 @@ Automatically updated flake that provides selected addons for the following:
   - User Agent String Switcher
   - React Developer Tools
   - Vue.js Devtools
+  - Bypass Paywalls Clean
 - [Thunderbird]
   - ImportExportTools NG
-<!-- TODO - [Zotero] -->
+- [Zotero]
+  - Better BibTeX
 
 [Firefox]: https://addons.mozilla.org/en-US/firefox/
 [Thunderbird]: https://addons.thunderbird.net/en-US/thunderbird/

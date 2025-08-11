@@ -1,10 +1,10 @@
-# Update addons or something.
-from base64 import b64encode
 import json
 import json5
 from urllib3 import PoolManager
 from platform import system
 from sys import argv
+
+from updater.extras import get_extra_addons, to_sri_hash
 
 USER_AGENT = f"NixMozillaAddons/1.0 ({system()}; +https://github.com/andre4ik3/nix-mozilla-addons)"
 
@@ -14,17 +14,9 @@ API_VERSION = 4
 # Mapping of products to their addon server.
 ADDON_SERVER = {
     "firefox": "https://addons.mozilla.org/api",
-    "thunderbird": "https://addons.thunderbird.net/api"
+    "thunderbird": "https://addons.thunderbird.net/api",
+    "zotero": "https://example.com/placeholder/api",
 }
-
-
-def to_sri_hash(data: str) -> str:
-    """Converts a hash from an addon server to an SRI hash."""
-    algorithm, data = data.split(":")
-    data = bytes.fromhex(data)
-    data = b64encode(data)
-    data = data.decode("ascii")
-    return f"{algorithm}-{data}".strip()
 
 
 def get_addon(http: PoolManager, api_base: str, addon_name: str) -> dict:
@@ -42,8 +34,11 @@ def get_addon(http: PoolManager, api_base: str, addon_name: str) -> dict:
         "alias": data["slug"],
         "version": version["version"],
         "file": {
-            **file,
+            "url": file["url"],
             "hash": to_sri_hash(file["hash"]),
+        },
+        "passthru": {
+            "file": file,
         },
     }
 
@@ -65,6 +60,9 @@ def update_addons_for_product(http: PoolManager, product: str, addons: list[str]
             data[name] = get_addon(http, api_base, name)
         except Exception as err:
             print(f"!! Failed to fetch addon {name}: {err}")
+
+    # Merge with extra addons not found on Mozilla addons.
+    data = {**data, **get_extra_addons(http, product)}
 
     with open(f"{product}.json", "w") as fp:
         json.dump(data, fp)

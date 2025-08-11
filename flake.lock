@@ -3,11 +3,11 @@
     "data": {
       "flake": false,
       "locked": {
-        "lastModified": 1754926194,
-        "narHash": "sha256-VUB9AyiJL+RFj0LvefJrHo0b9X7Gb/hIyrSFZs8pfpA=",
+        "lastModified": 1754926454,
+        "narHash": "sha256-f94qtYRfjoN3vgXJ+qC00+V7J+jlU0Mtf5E9vKx6U9I=",
         "owner": "andre4ik3",
         "repo": "nix-mozilla-addons",
-        "rev": "99b83d70c6fc9892a9edc24a5295db3b89c7061c",
+        "rev": "c316cb3e3e790ebd8bd554d37985ff2d97f6648c",
         "type": "github"
       },
       "original": {
@@ -17,13 +17,28 @@
         "type": "github"
       }
     },
+    "flake-compat": {
+      "locked": {
+        "lastModified": 1746162366,
+        "narHash": "sha256-5SSSZ/oQkwfcAz/o/6TlejlVGqeK08wyREBQ5qFFPhM=",
+        "owner": "nix-community",
+        "repo": "flake-compat",
+        "rev": "0f158086a2ecdbb138cd0429410e44994f1b7e4b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1754863774,
-        "narHash": "sha256-OOkhunEjy+t5xP3oMxD9ezDZ3j3PYfOsT9aro/WcBGA=",
+        "lastModified": 1754937576,
+        "narHash": "sha256-3sWA5WJybUE16kIMZ3+uxcxKZY/JRR4DFBqLdSLBo7w=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "a84e756ad67fa42311e2d22cbc8f566ee46a04fd",
+        "rev": "ddae11e58c0c345bf66efbddbf2192ed0e58f896",
         "type": "github"
       },
       "original": {
@@ -36,6 +51,7 @@
     "root": {
       "inputs": {
         "data": "data",
+        "flake-compat": "flake-compat",
         "nixpkgs": "nixpkgs"
       }
     }

@@ -10,9 +10,8 @@ let
   mkAddonPackage = addon: fetchurl {
     # name = "${addon.alias}-${addon.version}.xpi";
     pname = addon.alias;
-    inherit (addon) version;
+    inherit (addon) version passthru;
     inherit (addon.file) url hash;
-    passthru = addon.file;
   };
 
   addonsForProduct = product: let
