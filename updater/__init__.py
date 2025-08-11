@@ -48,12 +48,7 @@ def update_addons_for_product(http: PoolManager, product: str, addons: dict[str,
     """Updates all addons for a particular product."""
     print(f"=> Updating addons for {product}")
     api_base = f"{ADDON_SERVER[product]}/v{API_VERSION}"
-
-    try:
-        with open(f"{product}.json", "r") as fp:
-            data: dict = json.load(fp)
-    except FileNotFoundError:
-        data = {}
+    data = {}
 
     for name, addon_id in addons.items():
         print(f"Fetching {name}")
