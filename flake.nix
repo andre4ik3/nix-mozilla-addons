@@ -31,7 +31,10 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       default = pkgs.mkShell {
-        packages = [ pkgs.python3 ];
+        packages = with pkgs; [
+          keep-sorted
+          python3
+        ];
       };
     });
   };

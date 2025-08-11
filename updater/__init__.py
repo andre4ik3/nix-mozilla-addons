@@ -19,31 +19,32 @@ ADDON_SERVER = {
 }
 
 
-def get_addon(http: PoolManager, api_base: str, addon_name: str) -> dict:
+def get_addon(http: PoolManager, api_base: str, addon_id: str, name: str) -> dict:
     """Fetches the data of an addon."""
-    resp = http.request("GET", f"{api_base}/addons/addon/{addon_name}/")
+    resp = http.request("GET", f"{api_base}/addons/addon/{addon_id}/")
     if resp.status != 200:
-        raise Exception(f"Failed to fetch metadata for addon {addon_name}: HTTP {resp.status}")
+        raise Exception(f"Failed to fetch metadata for addon {name}: HTTP {resp.status}")
     data = resp.json()
 
     version = data["current_version"]
     file = version["files"][0]
 
     return {
-        "id": data["guid"],
-        "alias": data["slug"],
+        "name": data["name"],
         "version": version["version"],
         "file": {
             "url": file["url"],
             "hash": to_sri_hash(file["hash"]),
         },
         "passthru": {
+            "id": data["guid"],
+            "alias": data["slug"],
             "file": file,
         },
     }
 
 
-def update_addons_for_product(http: PoolManager, product: str, addons: list[str]):
+def update_addons_for_product(http: PoolManager, product: str, addons: dict[str, str]):
     """Updates all addons for a particular product."""
     print(f"=> Updating addons for {product}")
     api_base = f"{ADDON_SERVER[product]}/v{API_VERSION}"
@@ -54,10 +55,10 @@ def update_addons_for_product(http: PoolManager, product: str, addons: list[str]
     except FileNotFoundError:
         data = {}
 
-    for name in addons:
+    for name, addon_id in addons.items():
         print(f"Fetching {name}")
         try:
-            data[name] = get_addon(http, api_base, name)
+            data[name] = get_addon(http, api_base, addon_id, name)
         except Exception as err:
             print(f"!! Failed to fetch addon {name}: {err}")
 

@@ -1,42 +1,62 @@
-// Each item in the list is either an extension's GUID or slug. GUID is preferred.
-// A comment next to each item indicates a user-friendly extension name for bookkeeping purposes.
+// Each item in the list is the extension package name set to either its GUID or slug. GUID is preferred.
+// Don't forget to run `keep-sorted` to keep the extensions in alphabetical order.
 
 {
-  "firefox": [
-    // Privacy/Security
-    "@testpilot-containers", // Firefox Multi-Account Containers
-    "jsr@javascriptrestrictor", // JShelter
-    "{73a6fe31-595d-460b-a920-fcc0f8843232}", // NoScript
-    "uBlock0@raymondhill.net", // uBlock Origin
-
-    // Desktop/Application Integration
-    "{446900e4-71c2-419f-a6a7-df9c091e268b}", // Bitwarden Password Manager
-    "keepassxc-browser@keepassxc.org", // KeePassXC-Browser
-    "plasma-browser-integration@kde.org", // Plasma Integration
-
-    // Multimedia
-    "firefox@betterttv.net", // BetterTTV
-    "sponsorBlocker@ajay.app", // SponsorBlock
-
-    // Customization
-    "ATBC@EasonWong", // Adaptive Tab Bar Color
-    "{bbb880ce-43c9-47ae-b746-c3e0096c5b76}", // Catppuccin for Web File Explorer Icons
-    "addon@darkreader.org", // Dark Reader
-    "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}", // Stylus
-    "firefox@tampermonkey.net", // Tampermonkey
-
-    // Developer
-    "{a6c4a591-f1b2-4f03-b3ff-767e5bedf4e7}", // User Agent String Switcher
-    "@react-devtools", // React Developer Tools
-    "{5caff8cc-3d2e-4110-a88a-003cc85b3858}", // Vue.js Devtools
-  ],
-  "thunderbird": [
-    "ImportExportToolsNG@cleidigh.kokkini.net", // ImportExportTools NG
-  ],
-  "zotero": [
+  "firefox": {
+    // keep-sorted start
+    "_1password": "{d634138d-c276-4fc8-924b-40a0ea21d284}",
+    "adaptive-tab-bar-color": "ATBC@EasonWong",
+    "auto-tab-discard": "{c2c003ee-bd69-42a2-b0e9-6f34222cb046}",
+    "betterttv": "firefox@betterttv.net",
+    "bitwarden": "{446900e4-71c2-419f-a6a7-df9c091e268b}",
+    "catppuccin-file-icons": "{bbb880ce-43c9-47ae-b746-c3e0096c5b76}",
+    "clearurls": "{74145f27-f039-47ce-a470-a662b129930a}",
+    "consent-o-matic": "gdpr@cavi.au.dk",
+    "containers": "@testpilot-containers",
+    "copy-plaintext": "copyplaintext@eros.man",
+    "dark-reader": "addon@darkreader.org",
+    "decentraleyes": "jid1-BoFifL9Vbdl2zQ@jetpack",
+    "duckduckgo": "jid1-ZAdIEUB7XOzOJw@jetpack",
+    "foxyproxy": "foxyproxy@eric.h.jung",
+    "icloud-passwords": "password-manager-firefox-extension@apple.com",
+    "jshelter": "jsr@javascriptrestrictor",
+    "keepassxc": "keepassxc-browser@keepassxc.org",
+    "languagetool": "languagetool-webextension@languagetool.org",
+    "noscript": "{73a6fe31-595d-460b-a920-fcc0f8843232}",
+    "plasma-integration": "plasma-browser-integration@kde.org",
+    "privacy-badger": "jid1-MnnxcxisBPnSXQ@jetpack",
+    "react-devtools": "@react-devtools",
+    "return-youtube-dislike": "{762f9885-5a13-4abd-9c77-433dcd38b8fd}",
+    "sidebery": "{3c078156-979c-498b-8990-85f7987dd929}",
+    "sponsorblock": "sponsorBlocker@ajay.app",
+    "steamdb": "firefox-extension@steamdb.info",
+    "stylus": "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}",
+    "tampermonkey": "firefox@tampermonkey.net",
+    "tree-style-tab": "treestyletab@piro.sakura.ne.jp",
+    "ublock-origin": "uBlock0@raymondhill.net",
+    "unhook": "myallychou@gmail.com",
+    "user-agent-switcher": "{a6c4a591-f1b2-4f03-b3ff-767e5bedf4e7}",
+    "video-download-helper": "{b9db16a4-6edc-47ec-a1f4-b86292ed211d}",
+    "vuejs-devtools": "{5caff8cc-3d2e-4110-a88a-003cc85b3858}",
+    "web-archives": "{d07ccf11-c0cd-4938-a265-2a4d6ad01189}",
+    // keep-sorted end
+  },
+  "thunderbird": {
+    // keep-sorted start
+    "cardbook": "cardbook@vigneau.philippe",
+    "conversations": "gconversation@xulforum.org",
+    "extract-em": "extractem@tmccoid.tech",
+    "import-export-tools-ng": "ImportExportToolsNG@cleidigh.kokkini.net",
+    "languagetool": "languagetool-mailextension@languagetool.org",
+    "minimize-on-close": "minimizeonclose@rsjtdrjgfuzkfg.com",
+    "quicktext": "{8845e3b3-e8fb-40e2-95e9-ec40294818c4}",
+    "send-later": "sendlater3@kamens.us",
+    // keep-sorted end
+  },
+  "zotero": {
     /**
-     * This is a placeholder, as Zotero does not have its own addons store.
+     * This is a placeholder, as Zotero does not have its own addons server.
      * Addons must be defined manually in `updater/extras.py`.
      */
-  ],
+  },
 }
