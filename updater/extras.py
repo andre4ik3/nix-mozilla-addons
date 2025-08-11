@@ -62,7 +62,6 @@ def get_firefox_bpc(http: PoolManager) -> dict:
         "passthru": {
             "id": "magnolia@12.34",
             "alias": "bypass-paywalls-clean",
-            "file": file,
         },
     }
 
@@ -71,7 +70,7 @@ def get_extra_addons(http: PoolManager, product: str) -> dict:
     """Returns extra addons for a product that aren't found on Mozilla's addons servers."""
     if product == "firefox":
         return {
-            "magnolia@12.34": get_firefox_bpc(http),
+            "bypass-paywalls-clean": get_firefox_bpc(http),
         }
     elif product == "zotero":
         return {
