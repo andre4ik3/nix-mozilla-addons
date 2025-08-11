@@ -5,6 +5,7 @@ import json5
 from urllib3 import PoolManager
 from platform import system
 from datetime import datetime, timedelta, timezone
+from sys import argv
 
 USER_AGENT = f"NixMozillaAddons/1.0 ({system()}; +https://github.com/andre4ik3/nix-mozilla-addons)"
 
@@ -113,8 +114,11 @@ def update_addons_for_product(http: PoolManager, product: str, addons: list[str]
 
     api_base = f"{ADDON_SERVER[product]}/v{API_VERSION}"
 
-    with open(f"addons/{product}.json", "r") as fp:
-        data: dict = json.load(fp)
+    try:
+        with open(f"{product}.json", "r") as fp:
+            data: dict = json.load(fp)
+    except FileNotFoundError:
+        data = {}
 
     for name in addons:
         now = datetime.now(timezone.utc)
@@ -131,14 +135,14 @@ def update_addons_for_product(http: PoolManager, product: str, addons: list[str]
             except Exception as err:
                 print(f"!! Failed to fetch addon {name}: {err}")
 
-    with open(f"addons/{product}.json", "w") as fp:
+    with open(f"{product}.json", "w") as fp:
         json.dump(data, fp)
 
 
 def main():
     http = PoolManager(headers={"User-Agent": USER_AGENT})
 
-    with open("addon-list.json5", "r") as fp:
+    with open(argv[1], "r") as fp:
         addon_list = json5.load(fp)
 
     for product in addon_list:
