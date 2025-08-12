@@ -9,11 +9,8 @@ let
 
   mkAddonPackage = pname: addon: fetchurl {
     inherit pname;
-    inherit (addon) version;
+    inherit (addon) version passthru;
     inherit (addon.file) url hash;
-    passthru = {
-      inherit (addon) id alias;
-    } // addon.passthru;
   };
 
   addonsForProduct = product: let

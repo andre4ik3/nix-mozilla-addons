@@ -17,10 +17,6 @@ seen in [`extras.py`](./updater/extras.py).
 
 Extensions are automatically updated daily using GitHub actions.
 
-[Firefox]: https://addons.mozilla.org/en-US/firefox/
-[Thunderbird]: https://addons.thunderbird.net/en-US/thunderbird/
-[Zotero]: https://www.zotero.org/support/plugins
-
 Usage
 -----
 
@@ -58,3 +54,65 @@ pinning the addon versions separately from the code):
   };
 }
 ```
+
+In addition, each extension passes through its extension ID, which can be used in extension policies for configuration.
+Here is an example of a NixOS module configuring Firefox with uBlock Origin and preconfigured filters:
+
+```nix
+{ pkgs, ... }:
+
+let
+  policies = with pkgs.firefoxAddons; {
+    ExtensionSettings = {
+      ${ublock-origin.id} = {
+        install_url = "file://${ublock-origin}";
+        installation_mode = "force_installed";
+        default_area = "menupanel";
+        private_browsing = true;
+      };
+    };
+    "3rdparty".extensions = {
+      ${ublock-origin.id} = {
+        toOverwrite.filterLists = [
+          "user-filters"
+          "ublock-filters"
+          "ublock-badware"
+          "ublock-privacy"
+          "ublock-quick-fixes"
+          "ublock-unbreak"
+          "easylist"
+          "easyprivacy"
+          "urlhaus-1"
+          "plowe-0"
+          "fanboy-cookiemonster"
+          "ublock-cookies-easylist"
+          "fanboy-social"
+          "easylist-chat"
+          "easylist-newsletters"
+          "easylist-notifications"
+          "easylist-annoyances"
+        ];
+      };
+    };
+  };
+
+  package = pkgs.firefox.override {
+    extraPolicies = policies;
+  };
+in
+
+{
+  # for Darwin
+  environment.systemPackages = [ package ];
+
+  # for NixOS
+  programs.firefox = {
+    enable = true;
+    inherit package policies;
+  };
+}
+```
+
+[Firefox]: https://addons.mozilla.org/en-US/firefox/
+[Thunderbird]: https://addons.thunderbird.net/en-US/thunderbird/
+[Zotero]: https://www.zotero.org/support/plugins
