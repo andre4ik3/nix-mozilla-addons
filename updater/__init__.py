@@ -58,7 +58,7 @@ def update_addons_for_product(http: PoolManager, product: str, addons: dict[str,
             print(f"!! Failed to fetch addon {name}: {err}")
 
     # Merge with extra addons not found on Mozilla addons.
-    data = {**data, **get_extra_addons(http, product)}
+    data = {**data, **get_extra_addons(http, product, data)}
 
     with open(f"{product}.json", "w") as fp:
         json.dump(data, fp)
