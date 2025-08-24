@@ -3,11 +3,11 @@
     "data": {
       "flake": false,
       "locked": {
-        "lastModified": 1755908492,
-        "narHash": "sha256-s2l5TcNBopODx/6TPDIEapsAWVBSPkL0fe3ITBjHc/g=",
+        "lastModified": 1756050318,
+        "narHash": "sha256-W8Klq9h3wXt+Vknfbm22lAZ3nPzoGJOudQmCl0fyJbw=",
         "owner": "andre4ik3",
         "repo": "nix-mozilla-addons",
-        "rev": "5b0c3a65859b210af049c657b443c55469846283",
+        "rev": "e202da4ab2a5112eb4abbac18de960f4f6333ac1",
         "type": "github"
       },
       "original": {
