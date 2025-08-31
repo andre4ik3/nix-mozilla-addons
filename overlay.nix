@@ -15,7 +15,7 @@ let
 
   addonsForProduct = product: let
     addons = lib.importJSON "${data}/${product}.json";
-  in lib.mapAttrs (mkAddonPackage) addons;
+  in lib.mapAttrs mkAddonPackage addons;
 in
 
 {

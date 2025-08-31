@@ -1,5 +1,6 @@
-// Each item in the list is the extension package name set to either its GUID or slug. GUID is preferred.
-// Don't forget to run `keep-sorted` to keep the extensions in alphabetical order.
+// Each item in the list is the extension package name set to either its GUID or slug on the official addon store. GUID is preferred.
+// Extensions that are not available on the official addon store must be defined in `updater/extras.py`.
+// Don't forget to run `nix fmt` to keep the extensions in alphabetical order.
 
 {
   "firefox": {

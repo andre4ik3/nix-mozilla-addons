@@ -93,16 +93,20 @@ def get_firefox_bpc(http: PoolManager) -> dict:
 
 
 # Mapping of extension package names to their fetchers.
+# Don't forget to run `nix fmt` to keep the extensions in alphabetical order.
 FETCHERS = {
     "firefox": {
+        # keep-sorted start block=yes
         "bypass-paywalls-clean": lambda http: get_firefox_bpc(http),
         "zotero-connector": lambda http: get_from_update_url(
             http, name="zotero-connector", id="zotero@chnm.gmu.edu",
             url="https://www.zotero.org/download/connector/firefox/release/updates.json"
         )
+        # keep-sorted end
     },
     "thunderbird": {},
     "zotero": {
+        # keep-sorted start block=yes
         "attachment-scanner": lambda http: get_from_github(
             http, name="attachment-scanner", id="attachmentscanner@changlab.um.edu.mo",
             owner="SciImage", repo="zotero-attachment-scanner"
@@ -135,6 +139,7 @@ FETCHERS = {
             http, name="scite", id="scite-zotero-plugin@scite.ai",
             owner="scitedotai", repo="scite-zotero-plugin"
         ),
+        # keep-sorted end
     },
 }
 
