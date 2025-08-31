@@ -3,11 +3,11 @@
     "data": {
       "flake": false,
       "locked": {
-        "lastModified": 1756174325,
-        "narHash": "sha256-jzv1WVW/3+8RuZ+mxuwXsTB8xkZqutwZLO6erZTO79g=",
+        "lastModified": 1756513256,
+        "narHash": "sha256-DFaFGR86m6AmejdgU+rCoiG52a+gRmjuJc7lxxPFnCM=",
         "owner": "andre4ik3",
         "repo": "nix-mozilla-addons",
-        "rev": "172c6c226037594197e48f5c1ae5c3c5f5343f4c",
+        "rev": "2a3bf73ef37da608605633061d3b81f280d027d2",
         "type": "github"
       },
       "original": {
@@ -34,11 +34,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1754983092,
-        "narHash": "sha256-+f19hCi22vRyjynJDfiN1qej7LsYPABQf+svxme1r2I=",
+        "lastModified": 1756617294,
+        "narHash": "sha256-aGnd4AHIYCWQKChAkHPpX+YYCt7pA6y2LFFA/s8q0wQ=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "aa68d16c20fa0bc9f43fad423af5c40b990fdf6d",
+        "rev": "b4c2c57c31e68544982226d07e4719a2d86302a8",
         "type": "github"
       },
       "original": {
