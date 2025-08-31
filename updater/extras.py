@@ -41,7 +41,7 @@ def get_from_update_url(http: PoolManager, *, name: str, id: str, url: str) -> d
     if resp.status != 200:
         raise Exception(f"Failed to fetch metadata for addon {name}: HTTP {resp.status}")
     data = resp.json()["addons"][id]
-    file = data[-1]
+    file = data["updates"][-1]
     return {
         "name": name,
         "version": file["version"],
