@@ -35,6 +35,27 @@ def get_from_github(http: PoolManager, *, name: str, id: str, owner: str, repo: 
     }
 
 
+def get_from_update_url(http: PoolManager, *, name: str, id: str, url: str) -> dict:
+    """Fetches an addon from its update URL."""
+    resp = http.request("GET", url)
+    if resp.status != 200:
+        raise Exception(f"Failed to fetch metadata for addon {name}: HTTP {resp.status}")
+    data = resp.json()["addons"][id]
+    file = data[-1]
+    return {
+        "name": name,
+        "version": file["version"],
+        "file": {
+            "url": file["update_link"],
+            "hash": to_sri_hash(file["update_hash"]),
+        },
+        "passthru": {
+            "id": id,
+            "alias": name,
+        },
+    }
+
+
 def bpc_get_hash(hashes: str, filename: str) -> str:
     """Scans the Bypass Paywalls Clean hashes file to extract a particular file's hash from it."""
     hashes = hashes.split("\n==================================================")
@@ -50,7 +71,7 @@ def get_firefox_bpc(http: PoolManager) -> dict:
     if resp.status != 200:
         raise Exception(f"Failed to fetch metadata for addon {name}: HTTP {resp.status}")
     data = resp.json()
-    file = data["addons"]["magnolia@12.34"]["updates"][0]
+    file = data["addons"]["magnolia@12.34"]["updates"][-1]
     filename = file["update_link"].split("?file=")[-1]
 
     hashes = http.request("GET", "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=release-hashes.txt")
@@ -75,6 +96,10 @@ def get_firefox_bpc(http: PoolManager) -> dict:
 FETCHERS = {
     "firefox": {
         "bypass-paywalls-clean": lambda http: get_firefox_bpc(http),
+        "zotero-connector": lambda http: get_from_update_url(
+            http, name="zotero-connector", id="zotero@chnm.gmu.edu",
+            url="https://www.zotero.org/download/connector/firefox/release/updates.json"
+        )
     },
     "thunderbird": {},
     "zotero": {
