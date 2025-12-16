@@ -2,7 +2,7 @@
   description = "Access Mozilla addons from Nix";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "https://nixpkgs.flake.andre4ik3.dev";
     flake-compat.url = "github:nix-community/flake-compat";
 
     data = {
