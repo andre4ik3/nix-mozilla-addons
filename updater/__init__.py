@@ -55,7 +55,7 @@ def update_addons_for_product(http: PoolManager, product: str, addons: dict[str,
     except FileNotFoundError as err:
         data = {}
 
-    for name in data.keys():
+    for name in list(data.keys()):
         if name not in addons:
             del data[name]
 
