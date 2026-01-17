@@ -66,4 +66,42 @@
      * Addons must be defined manually in `updater/extras.py`.
      */
   },
+  "chromium": {
+    // keep-sorted start
+    "_1password": "aeblfdkhhhdcdjpifhhbdiojplfjncoa",
+    "betterttv": "ajopnjidmegmdimjlfnijceegpefgped",
+    "bitwarden": "nngceckbapebfimnlniiiahkandclblb",
+    "catppuccin-web-file-icons": "lnjaiaapbakfhlbjenjkhffcdpoompki",
+    "consent-o-matic": "mdjildafknihdffpkfmmpnpoiajfjnjd",
+    "dark-reader": "eimadpbcbfnmbkopoojfekhnkhdbieeh",
+    "decentraleyes": "ldpochfccmkkmhdbclfhpagapcfdljkj",
+    "duckduckgo": "bkdgflcldnnnapblkhphbgpggdiikppg",
+    "icloud-passwords": "pejdijmoenmkgeppbflobdenhhabjlaj",
+    "jshelter": "ammoloihpcbognfddfjcljgembpibcmb",
+    "justdeleteme": "dlhckcablohllindinahbbpnfgblimoe",
+    "keepassxc-browser": "oboonakemofpalcgghocfoadofidjkkk",
+    "languagetool": "oldceeleldhonbafppcapldpdifcinji",
+    "noscript": "doojmbjmlfjjnbmnoijecmcbfeoakpjm",
+    "plasma-integration": "cimiefiiaegbelhefglklhhakcgmhkai",
+    "privacy-badger": "pkehgijcmpdhfbdbbnkijodmdjhbjlgp",
+    "privacy-pass": "ajhmfdgkijocedmfjonnpjfojldioehi",
+    "react-devtools": "fmkadmapgofadopljbjfkapdkoienihi",
+    "return-youtube-dislike": "gebbhagfogifgggkldgodflihgfeippi",
+    "snowflake": "mafpmfcccpbjnhfhjnllmmalhifmlcie",
+    "sponsorblock": "mnjggcdmjocbbbhaepdhchncahnbgone",
+    "steamdb": "kdbmhfkmnlmbkgbabkdealhhbfhlmmon",
+    "stylus": "clngdbkpkpeebahjckkjfobafhncgmne",
+    "tampermonkey": "dhdgffkkebhmkfjojejmpbldmpobfkfo",
+    "ublock-origin": "cjpalhdlnbpafiamejdnhcphjbkeiagm",
+    "ublock-origin-lite": "ddkjiahejlhfcafbddmgiahcphecmpfh",
+    "unhook": "khncfooichmfjbepaaaebmommgaepoid",
+    "user-agent-switcher": "djflhoibgkdhkhhcedjiklpkjnoahfmg",
+    "video-download-helper": "lmjnegcaeklhafolokijcfjliaokphfk",
+    "vimium": "dbepggeogbaibhgnhhndojpepiihcmeb",
+    "vuejs-devtools": "nhdogjmejiglipccpnnnanhbledajbpd",
+    "web-archives": "hkligngkgcpcolhcnkgccglchdafcnao",
+    "webrtc-network-limiter": "npeicpdbkakmehahjeeohfdhnlpdklia",
+    "zotero-connector": "ekhagklcjbdpajgpjgmbionohlpdbjgc",
+    // keep-sorted end
+  }
 }

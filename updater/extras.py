@@ -1,15 +1,54 @@
+import xml.etree.ElementTree as ETree
 from base64 import b64encode
-from urllib3 import PoolManager
 from re import search
+from urllib.parse import urlsplit, parse_qs
+
+from urllib3 import PoolManager
+
+# chromium parsing stuff
+NAMESPACE = "{http://www.google.com/update2/response}"
+ROOT = NAMESPACE + "gupdate"
+APP = NAMESPACE + "app"
+DATA = NAMESPACE + "updatecheck"
 
 
-def to_sri_hash(data: str) -> str:
-    """Converts a hash from an addon server to an SRI hash."""
-    algorithm, data = data.split(":")
+def to_sri_hash(algorithm, data: str) -> str:
+    """Converts a hash to an SRI hash."""
     data = bytes.fromhex(data)
     data = b64encode(data)
     data = data.decode("ascii")
     return f"{algorithm}-{data}".strip()
+
+
+def to_sri_hash_prefixed(data: str) -> str:
+    """Converts a hash from an addon server to an SRI hash."""
+    algorithm, data = data.split(":")
+    return to_sri_hash(algorithm, data)
+
+
+def get_unproxied_url(url: str) -> str:
+    """Resolves Helium Services proxy URL to the real Google one."""
+    components = urlsplit(url)
+    query = parse_qs(components.query)
+    return query["url"][0]
+
+
+def parse_chromium_extension(name: str, raw: bytes, unproxy: bool = True):
+    """Parses a Chromium update XML manifest."""
+    tree = ETree.fromstring(raw)
+    app = tree.find(APP)
+    data = app.find(DATA)
+    assert data is not None
+    hash = data.get("hash_sha256")
+    return {
+        "name": name,
+        "version": data.get("version"),
+        "file": {
+            "url": get_unproxied_url(data.get("codebase")) if unproxy else data.get("codebase"),
+            "hash": to_sri_hash("sha256", hash) if hash else None,
+        },
+        "passthru": {},
+    }
 
 
 def get_from_github(http: PoolManager, *, name: str, id: str, owner: str, repo: str) -> dict:
@@ -26,7 +65,7 @@ def get_from_github(http: PoolManager, *, name: str, id: str, owner: str, repo: 
         "version": version,
         "file": {
             "url": file["browser_download_url"],
-            "hash": to_sri_hash(file["digest"]),
+            "hash": to_sri_hash_prefixed(file["digest"]),
         },
         "passthru": {
             "id": id,
@@ -35,8 +74,8 @@ def get_from_github(http: PoolManager, *, name: str, id: str, owner: str, repo: 
     }
 
 
-def get_from_update_url(http: PoolManager, *, name: str, id: str, url: str) -> dict:
-    """Fetches an addon from its update URL."""
+def get_mozilla_from_update_url(http: PoolManager, *, name: str, id: str, url: str) -> dict:
+    """Fetches a Mozilla addon from its update URL."""
     resp = http.request("GET", url)
     if resp.status != 200:
         raise Exception(f"Failed to fetch metadata for addon {name}: HTTP {resp.status}")
@@ -47,7 +86,7 @@ def get_from_update_url(http: PoolManager, *, name: str, id: str, url: str) -> d
         "version": file["version"],
         "file": {
             "url": file["update_link"],
-            "hash": to_sri_hash(file["update_hash"]),
+            "hash": to_sri_hash_prefixed(file["update_hash"]),
         },
         "passthru": {
             "id": id,
@@ -56,34 +95,34 @@ def get_from_update_url(http: PoolManager, *, name: str, id: str, url: str) -> d
     }
 
 
-def bpc_get_hash(hashes: str, filename: str) -> str:
+def bpc_get_hash(hashes: bytes, filename: str) -> str:
     """Scans the Bypass Paywalls Clean hashes file to extract a particular file's hash from it."""
-    hashes = hashes.split("\n==================================================")
+    hashes = hashes.decode("utf-8").split("\n==================================================")
     entry = filter(lambda x: filename in x, hashes)
     entry = list(entry)[0]
-    data = search("\w{64}", entry)[0]
-    return to_sri_hash(f"sha256:{data}")
+    data = search(r"\w{64}", entry)[0]
+    return to_sri_hash_prefixed(f"sha256:{data}")
 
 
 def get_firefox_bpc(http: PoolManager) -> dict:
     """Fetches the Bypass Paywalls Clean addon for Firefox."""
     resp = http.request("GET", "https://gitflic.ru/project/magnolia1234/bpc_updates/blob/raw?file=updates.json")
     if resp.status != 200:
-        raise Exception(f"Failed to fetch metadata for addon {name}: HTTP {resp.status}")
+        raise Exception(f"HTTP {resp.status} while getting updates")
     data = resp.json()
     file = data["addons"]["magnolia@12.34"]["updates"][-1]
     filename = file["update_link"].split("?file=")[-1]
 
     hashes = http.request("GET", "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=release-hashes.txt")
     if hashes.status != 200:
-        raise Exception(f"Failed to fetch metadata for addon {name}: HTTP {resp.status}")
+        raise Exception(f"HTTP {resp.status} while getting hashes")
 
     return {
         "name": "bypass-paywalls-clean",
         "version": file["version"],
         "file": {
             "url": file["update_link"],
-            "hash": bpc_get_hash(hashes.data.decode("utf-8"), filename),
+            "hash": bpc_get_hash(hashes.data, filename),
         },
         "passthru": {
             "id": "magnolia@12.34",
@@ -92,13 +131,29 @@ def get_firefox_bpc(http: PoolManager) -> dict:
     }
 
 
+def get_chromium_bpc(http: PoolManager) -> dict:
+    """Fetches the Bypass Paywalls Clean addon for Chromium."""
+    resp = http.request("GET", "https://gitflic.ru/project/magnolia1234/bpc_updates/blob/raw?file=updates.xml")
+    if resp.status != 200:
+        raise Exception(f"HTTP {resp.status} while getting updates")
+    data = parse_chromium_extension("bypass-paywalls-clean", resp.data, unproxy=False)
+    filename = data["file"]["url"].split("?file=")[-1]
+
+    hashes = http.request("GET", "https://gitflic.ru/project/magnolia1234/bpc_uploads/blob/raw?file=release-hashes.txt")
+    if hashes.status != 200:
+        raise Exception(f"HTTP {resp.status} while getting hashes")
+
+    data["file"]["hash"] = bpc_get_hash(hashes.data, filename)
+    return data
+
+
 # Mapping of extension package names to their fetchers.
 # Don't forget to run `nix fmt` to keep the extensions in alphabetical order.
 FETCHERS = {
     "firefox": {
         # keep-sorted start block=yes
         "bypass-paywalls-clean": lambda http: get_firefox_bpc(http),
-        "zotero-connector": lambda http: get_from_update_url(
+        "zotero-connector": lambda http: get_mozilla_from_update_url(
             http, name="zotero-connector", id="zotero@chnm.gmu.edu",
             url="https://www.zotero.org/download/connector/firefox/release/updates.json"
         )
@@ -141,6 +196,11 @@ FETCHERS = {
         ),
         # keep-sorted end
     },
+    "chromium": {
+        # keep-sorted start block=yes
+        "bypass-paywalls-clean": lambda http: get_chromium_bpc(http),
+        # keep-sorted end
+    }
 }
 
 

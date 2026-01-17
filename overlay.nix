@@ -22,4 +22,5 @@ in
   firefoxAddons = addonsForProduct "firefox";
   thunderbirdAddons = addonsForProduct "thunderbird";
   zoteroAddons = addonsForProduct "zotero";
+  chromiumExtensions = addonsForProduct "chromium";
 }
