@@ -97,11 +97,12 @@ def get_mozilla_from_update_url(http: PoolManager, *, name: str, id: str, url: s
 
 def bpc_get_hash(hashes: bytes, filename: str) -> str:
     """Scans the Bypass Paywalls Clean hashes file to extract a particular file's hash from it."""
-    hashes = hashes.decode("utf-8").split("\n==================================================")
-    entry = filter(lambda x: filename in x, hashes)
-    entry = list(entry)[0]
-    data = search(r"\w{64}", entry)[0]
-    return to_sri_hash_prefixed(f"sha256:{data}")
+    hashes = hashes.decode("utf-8").splitlines()
+    for i, line in enumerate(hashes):
+        if filename in line:
+            data = search(r"\w{64}", hashes[i + 1])[0]
+            return to_sri_hash_prefixed(f"sha256:{data}")
+    raise ValueError(f"failed to find hash for {filename}")
 
 
 def get_firefox_bpc(http: PoolManager) -> dict:
