@@ -47,7 +47,9 @@ def parse_chromium_extension(name: str, raw: bytes, unproxy: bool = True):
             "url": get_unproxied_url(data.get("codebase")) if unproxy else data.get("codebase"),
             "hash": to_sri_hash("sha256", hash) if hash else None,
         },
-        "passthru": {},
+        "passthru": {
+            "id": app.get("appid")
+        },
     }
 
 
