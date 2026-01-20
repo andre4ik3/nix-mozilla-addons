@@ -9,7 +9,7 @@ let
 
   mkAddonPackage = ext: pname: addon: fetchurl {
     name = "${pname}-${addon.version}.${ext}";
-    inherit (addon) passthru;
+    inherit (addon) version passthru;
     inherit (addon.file) url hash;
   };
 
