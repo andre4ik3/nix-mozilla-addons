@@ -7,15 +7,17 @@ final: prev:
 let
   inherit (final) lib fetchurl;
 
-  mkAddonPackage = pname: addon: fetchurl {
-    inherit pname;
-    inherit (addon) version passthru;
+  mkAddonPackage = ext: pname: addon: fetchurl {
+    name = "${pname}-${addon.version}.${ext}";
+    inherit (addon) passthru;
     inherit (addon.file) url hash;
   };
 
   addonsForProduct = product: let
+    extension = if product == "chromium" then "crx" else "xpi";
+    mkAddonPackage' = mkAddonPackage extension;
     addons = lib.importJSON "${data}/${product}.json";
-  in lib.mapAttrs mkAddonPackage addons;
+  in lib.mapAttrs mkAddonPackage' addons;
 in
 
 {
