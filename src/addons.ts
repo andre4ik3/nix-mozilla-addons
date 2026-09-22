@@ -94,7 +94,7 @@ export default {
     "sponsorblock": fetchAMO("firefox", "sponsorBlocker@ajay.app"),
     "steamdb": fetchAMO("firefox", "firefox-extension@steamdb.info"),
     "stylus": fetchAMO("firefox", "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}"),
-    "svelte-devtools": fetchAMO("firefox", "firefox-devtools@svelte.dev"),
+    "svelte-devtools": fetchAMO("firefox", "{a0370179-acc3-452f-9530-246b6adb2768}"),
     "tampermonkey": fetchAMO("firefox", "firefox@tampermonkey.net"),
     "tree-style-tab": fetchAMO("firefox", "treestyletab@piro.sakura.ne.jp"),
     "tridactyl": fetchAMO("firefox", "tridactyl.vim@cmcaine.co.uk"),
