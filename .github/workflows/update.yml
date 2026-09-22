@@ -8,7 +8,7 @@ on:
 jobs:
   update:
     name: "Update addons"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
 
     permissions:
       contents: write
@@ -16,11 +16,11 @@ jobs:
     steps:
       - uses: denoland/setup-deno@v2
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           path: master
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           ref: data
           path: data
@@ -29,7 +29,7 @@ jobs:
         working-directory: master
         run: deno run --frozen -A src/main.ts ../data
 
-      - uses: EndBug/add-and-commit@v9
+      - uses: EndBug/add-and-commit@v11
         with:
           cwd: data
           default_author: github_actions
