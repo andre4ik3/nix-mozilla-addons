@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "https://nixpkgs.flake.andre4ik3.dev";
-    flake-compat.url = "github:nix-community/flake-compat";
 
     data = {
       url = "github:andre4ik3/nix-browser-addons/data";
