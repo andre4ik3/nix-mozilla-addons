@@ -51,7 +51,7 @@ export default {
   firefox: {
     "_1password": fetchAMO("firefox", "{d634138d-c276-4fc8-924b-40a0ea21d284}"),
     "adaptive-tab-bar-color": fetchAMO("firefox", "ATBC@EasonWong"),
-    "anubis-bypass": fetchAMO("firefox", "anubis-bypass@zipdox.net"),
+    "anubis-bypass": fetchMozilla("https://webextensions.andre4ik3.dev/updates.json").pipe(addon("anubis-bypass@andre4ik3.dev")),
     "auto-tab-discard": fetchAMO("firefox", "{c2c003ee-bd69-42a2-b0e9-6f34222cb046}"),
     "betterttv": fetchAMO("firefox", "firefox@betterttv.net"),
     "bitwarden": fetchAMO("firefox", "{446900e4-71c2-419f-a6a7-df9c091e268b}"),
