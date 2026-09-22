@@ -1,7 +1,7 @@
 import * as z from "@zod/zod";
-import { Effect, Request, RequestResolver, Exit, Console } from "effect";
+import { Console, Effect, Exit, Request, RequestResolver } from "effect";
 import { decodeHex } from "@std/encoding";
-import { fetch, hash, parseJSON, parseXML, response, toSRI, parseSchema, Addon, listOf, tupleOf } from "./util.ts"; 
+import { Addon, fetch, hash, listOf, parseJSON, parseSchema, parseXML, response, toSRI, tupleOf } from "./util.ts";
 
 const AppId = z.string().regex(/^[a-p]{32}$/).length(32);
 export type AppId = z.infer<typeof AppId>;
@@ -55,72 +55,73 @@ interface FetchOmaha extends Request.Request<Addon, Error> {
 const FetchOmaha = Request.tagged<FetchOmaha>("FetchOmaha");
 
 const FetchOmahaResolver = RequestResolver.make(
-  (entries: ReadonlyArray<Request.Entry<FetchOmaha>>) => fetch(OMAHA_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Goog-Update-Interactivity": "fg",
-      "X-Goog-Update-Updater": `chromecrx-${CHROME_VERSION}`,
-    },
-    body: JSON.stringify({
-      request: {
-        protocol: "4.0",
-        sessionid: `{${crypto.randomUUID()}}`,
-        requestid: `{${crypto.randomUUID()}}`,
-        "@updater": "chromecrx",
-        updaterversion: CHROME_VERSION,
-        prodversion: CHROME_VERSION,
-        "@os": "linux",
-        arch: "x64",
-        dedup: "cr",
-        acceptformat: "crx3,download,run",
-        apps: entries.map(({ request }) => ({
-          appid: request.id,
-          version: "0",
-          updatecheck: {},
-        })),
+  (entries: ReadonlyArray<Request.Entry<FetchOmaha>>) =>
+    fetch(OMAHA_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Goog-Update-Interactivity": "fg",
+        "X-Goog-Update-Updater": `chromecrx-${CHROME_VERSION}`,
       },
-    }),
-  }).pipe(
-    Effect.tap(Console.log(`Making a request for ${entries.map(e => e.request.id).join(", ")}`)),
-    Effect.andThen(response.ok),
-    Effect.andThen(response.text),
-    Effect.map((r) => r.slice(4)),
-    Effect.andThen(parseJSON),
-    Effect.andThen(parseSchema(Response)),
-    Effect.andThen((response) =>
-      Effect.forEach(response.response.apps, (app) =>
-        parseSchema(AppUpdate)(app).pipe(
-          Effect.map((app) => ({
-            version: app.updatecheck.nextversion,
-            file: {
-              url: app.updatecheck.pipelines[0].operations[0].urls[0].url,
-              hash: toSRI("sha256")(decodeHex(app.updatecheck.pipelines[0].operations[0].out.sha256)),
-            },
-            passthru: { id: app.appid },
+      body: JSON.stringify({
+        request: {
+          protocol: "4.0",
+          sessionid: `{${crypto.randomUUID()}}`,
+          requestid: `{${crypto.randomUUID()}}`,
+          "@updater": "chromecrx",
+          updaterversion: CHROME_VERSION,
+          prodversion: CHROME_VERSION,
+          "@os": "linux",
+          arch: "x64",
+          dedup: "cr",
+          acceptformat: "crx3,download,run",
+          apps: entries.map(({ request }) => ({
+            appid: request.id,
+            version: "0",
+            updatecheck: {},
           })),
-          Effect.exit,
-          Effect.map((result) => ({ appid: app.appid, result }))
-        ),
-    )),
-    Effect.map((results) => entries.map((entry) => ({
-      entry,
-      result: results.find(({ appid }) => entry.request.id === appid)?.result,
-    }))),
-    Effect.retry({ times: 2 }),
-    Effect.andThen((results) =>
-      Effect.forEach(results, ({ entry, result }) =>
-        Request.complete(entry, result ?? Exit.fail(new Error("server did not return a response"))),
-        { discard: true },
-      )
-    ),
-    Effect.catch((error) =>
-      Effect.forEach(entries, (entry) =>
-        Request.completeEffect(entry, Effect.fail(error)),
-        { discard: true },
+        },
+      }),
+    }).pipe(
+      Effect.tap(Console.log(`Making a request for ${entries.map((e) => e.request.id).join(", ")}`)),
+      Effect.andThen(response.ok),
+      Effect.andThen(response.text),
+      Effect.map((r) => r.slice(4)),
+      Effect.andThen(parseJSON),
+      Effect.andThen(parseSchema(Response)),
+      Effect.andThen((response) =>
+        Effect.forEach(response.response.apps, (app) =>
+          parseSchema(AppUpdate)(app).pipe(
+            Effect.map((app) => ({
+              version: app.updatecheck.nextversion,
+              file: {
+                url: app.updatecheck.pipelines[0].operations[0].urls[0].url,
+                hash: toSRI("sha256")(decodeHex(app.updatecheck.pipelines[0].operations[0].out.sha256)),
+              },
+              passthru: { id: app.appid },
+            })),
+            Effect.exit,
+            Effect.map((result) => ({ appid: app.appid, result })),
+          ))
+      ),
+      Effect.map((results) =>
+        entries.map((entry) => ({
+          entry,
+          result: results.find(({ appid }) => entry.request.id === appid)?.result,
+        }))
+      ),
+      Effect.retry({ times: 2 }),
+      Effect.andThen((results) =>
+        Effect.forEach(results, ({ entry, result }) =>
+          Request.complete(entry, result ?? Exit.fail(new Error("server did not return a response"))), {
+          discard: true,
+        })
+      ),
+      Effect.catch((error) =>
+        Effect.forEach(entries, (entry) =>
+          Request.completeEffect(entry, Effect.fail(error)), { discard: true })
       ),
     ),
-  )
 );
 
 export const fetchOmaha = (id: AppId) => Effect.request(FetchOmaha({ id }), FetchOmahaResolver).pipe(Effect.result);
@@ -158,34 +159,33 @@ const Manifest = z.object({
   }),
 });
 
-export const fetchChromium = (url: string) => fetch(url).pipe(
-  Effect.andThen(response.ok),
-  Effect.andThen(response.text),
-  Effect.andThen(parseXML),
-  Effect.andThen(parseSchema(Manifest)),
-  Effect.andThen((data) =>
-    Effect.forEach(data.root.children, (app) =>
-      fetch(app.children[0].attributes.codebase).pipe(
-        Effect.tap(Console.log(`Downloading ${app.children[0].attributes.codebase} to hash it`)),
-        Effect.andThen(response.ok),
-        Effect.andThen(response.arrayBuffer),
-        Effect.andThen(hash("SHA-256")),
-        Effect.map(toSRI("sha256")),
-        Effect.map((hash) => ({
-          version: app.children[0].attributes.version,
-          file: {
-            url: app.children[0].attributes.codebase,
-            hash,
-          },
-          passthru: { id: app.attributes.appid },
-        } as Addon)),
-        Effect.retry({ times: 2 }),
-        Effect.result,
-        Effect.map((result) => ([app.attributes.appid, result] as const)),
-      ),
-      { concurrency: 3 },
+export const fetchChromium = (url: string) =>
+  fetch(url).pipe(
+    Effect.andThen(response.ok),
+    Effect.andThen(response.text),
+    Effect.andThen(parseXML),
+    Effect.andThen(parseSchema(Manifest)),
+    Effect.andThen((data) =>
+      Effect.forEach(data.root.children, (app) =>
+        fetch(app.children[0].attributes.codebase).pipe(
+          Effect.tap(Console.log(`Downloading ${app.children[0].attributes.codebase} to hash it`)),
+          Effect.andThen(response.ok),
+          Effect.andThen(response.arrayBuffer),
+          Effect.andThen(hash("SHA-256")),
+          Effect.map(toSRI("sha256")),
+          Effect.map((hash) => ({
+            version: app.children[0].attributes.version,
+            file: {
+              url: app.children[0].attributes.codebase,
+              hash,
+            },
+            passthru: { id: app.attributes.appid },
+          } as Addon)),
+          Effect.retry({ times: 2 }),
+          Effect.result,
+          Effect.map((result) => ([app.attributes.appid, result] as const)),
+        ), { concurrency: 3 })
     ),
-  ),
-  Effect.map((items) => Object.fromEntries(items)),
-  Effect.result,
-);
+    Effect.map((items) => Object.fromEntries(items)),
+    Effect.result,
+  );

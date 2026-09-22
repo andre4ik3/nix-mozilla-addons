@@ -1,8 +1,4 @@
 {
-  programs.keep-sorted = {
-    enable = true;
-    includes = [
-      "src/addons.ts"
-    ];
-  };
+  programs.deno.enable = true;
+  programs.keep-sorted.enable = true;
 }

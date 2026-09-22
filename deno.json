@@ -1,5 +1,7 @@
 {
-  "tasks": {
+  "fmt": {
+    "lineWidth": 120,
+    "exclude": ["*.md"]
   },
   "imports": {
     "@effect/platform-node": "npm:@effect/platform-node@4.0.0-beta.107",

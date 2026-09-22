@@ -1,13 +1,9 @@
-import { Effect, Result } from "effect";
-import { fetchChromium, fetchOmaha } from "./chromium.ts"; 
-import { fetchMozilla, fetchAMO } from "./mozilla.ts";
-import { Addon, fetch } from "./util.ts";
-import { fetchGitHub } from "./github.ts";
+// deno-fmt-ignore-file
 
-const addon = (id: string) =>
-  Effect.map((r: Result.Result<Record<string, Result.Result<Addon, Error>>, Error>) =>
-    Result.flatMap(r, (r) => r[id])
-  );
+import { fetchChromium, fetchOmaha } from "./chromium.ts";
+import { fetchAMO, fetchMozilla } from "./mozilla.ts";
+import { fetchGitHub } from "./github.ts";
+import { addon } from "./util.ts";
 
 export default {
   // keep-sorted start block=yes

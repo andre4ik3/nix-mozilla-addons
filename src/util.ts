@@ -1,7 +1,7 @@
 import * as z from "@zod/zod";
-import { Effect } from "effect";
+import { Effect, Result } from "effect";
 import { parse } from "@std/xml";
-import { encodeBase64, decodeHex } from "@std/encoding";
+import { decodeHex, encodeBase64 } from "@std/encoding";
 
 export const USER_AGENT = `NixBrowserAddons/1.0.0 (+https://github.com/andre4ik3/nix-browser-addons)`;
 
@@ -14,7 +14,7 @@ export interface Addon {
   passthru: {
     id: string;
   };
-};
+}
 
 export const fetch = (input: string | URL | Request, init?: RequestInit) =>
   Effect.tryPromise(() =>
@@ -24,9 +24,8 @@ export const fetch = (input: string | URL | Request, init?: RequestInit) =>
         ...init?.headers,
         "User-Agent": USER_AGENT,
       },
-    },
-  ),
-);
+    })
+  );
 
 export const response = {
   ok: (r: Response) => r.ok ? Effect.succeed(r) : Effect.fail(new Error(`${r.status} ${r.statusText}`)),
@@ -94,4 +93,7 @@ export function tupleOf<const S extends readonly z.ZodType[]>(schemas: S) {
 export const digestToSRI = (hash: string) => {
   const [alg, hex] = hash.split(":", 2);
   return toSRI(alg)(decodeHex(hex));
-}
+};
+
+export const addon = (id: string) =>
+  Effect.map((r: Result.Result<Record<string, Result.Result<Addon, Error>>, Error>) => Result.flatMap(r, (r) => r[id]));

@@ -1,6 +1,6 @@
 import * as z from "@zod/zod";
 import { Effect } from "effect";
-import { fetch, parseJSON, response, parseSchema, Addon, digestToSRI } from "./util.ts"; 
+import { Addon, digestToSRI, fetch, parseJSON, parseSchema, response } from "./util.ts";
 
 const BASE_URL = "https://api.github.com";
 const API_VERSION = "2026-03-10";
@@ -20,12 +20,12 @@ export interface FetchGitHubParams {
   owner: string;
   repo: string;
   id: string;
-};
+}
 
 export const fetchGitHub = ({ owner, repo, id }: FetchGitHubParams) =>
   fetch(
     `${BASE_URL}/repos/${owner}/${repo}/releases/latest`,
-    { headers: { "X-GitHub-Api-Version": API_VERSION } }
+    { headers: { "X-GitHub-Api-Version": API_VERSION } },
   ).pipe(
     Effect.andThen(response.ok),
     Effect.andThen(response.text),
