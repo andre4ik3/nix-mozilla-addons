@@ -39,7 +39,7 @@ const command = Command.make("nix-browser-addons-generator", {
           goodAddons.push([slug, addon]);
         },
         onFailure: function*(error) {
-          yield* Console.error(`- ${slug}: FAIL ${error})`);
+          yield* Console.error(`- ${slug}: FAIL (${error})`);
         },
       });
     }
