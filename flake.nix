@@ -1,12 +1,12 @@
 {
-  description = "Access Mozilla addons from Nix";
+  description = "Access browser addons from Nix";
 
   inputs = {
     nixpkgs.url = "https://nixpkgs.flake.andre4ik3.dev";
     flake-compat.url = "github:nix-community/flake-compat";
 
     data = {
-      url = "github:andre4ik3/nix-mozilla-addons/data";
+      url = "github:andre4ik3/nix-browser-addons/data";
       flake = false;
     };
   };
@@ -22,21 +22,22 @@
     lib.supportedSystems = systems;
 
     overlays = rec {
-      mozilla-addons = import ./overlay.nix data;
-      default = mozilla-addons;
+      mozilla-addons = lib.warn "nix-mozilla-addons has been renamed to nix-browser-addons" browser-addons;
+      browser-addons = import ./overlay.nix data;
+      default = browser-addons;
     };
 
     # `legacyPackages` is used instead of `packages`, because it's not a flat
     # package set, but rather grouped by product (i.e. `firefoxAddons.<...>`)
-    legacyPackages = eachSystem systems (pkgs: self.overlays.mozilla-addons pkgs pkgs);
+    legacyPackages = eachSystem systems (pkgs: self.overlays.browser-addons pkgs pkgs);
 
     packages = lib.warn ''
-      nix-mozilla-addons: please use the legacyPackages output
+      nix-browser-addons: please use the legacyPackages output
     '' self.legacyPackages;
 
     devShells = eachSystem devSystems (pkgs: {
       default = pkgs.mkShell {
-        packages = [ pkgs.python3 ];
+        packages = [ pkgs.deno ];
       };
     });
 
