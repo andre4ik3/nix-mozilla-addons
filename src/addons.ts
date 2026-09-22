@@ -10,7 +10,9 @@ const addon = (id: string) =>
   );
 
 export default {
+  // keep-sorted start block=yes
   chromium: {
+    // keep-sorted start block=yes
     "_1password": fetchOmaha("aeblfdkhhhdcdjpifhhbdiojplfjncoa"),
     "anubis-bypass": fetchChromium("https://webextensions.andre4ik3.dev/updates.xml").pipe(addon("hbocpnemmimnkcddekhpiogjigmjnemb")),
     "betterttv": fetchOmaha("ajopnjidmegmdimjlfnijceegpefgped"),
@@ -53,8 +55,10 @@ export default {
     "web-archives": fetchOmaha("hkligngkgcpcolhcnkgccglchdafcnao"),
     "webrtc-network-limiter": fetchOmaha("npeicpdbkakmehahjeeohfdhnlpdklia"),
     "zotero-connector": fetchOmaha("ekhagklcjbdpajgpjgmbionohlpdbjgc"),
+    // keep-sorted end
   },
   firefox: {
+    // keep-sorted start block=yes
     "_1password": fetchAMO("firefox", "{d634138d-c276-4fc8-924b-40a0ea21d284}"),
     "adaptive-tab-bar-color": fetchAMO("firefox", "ATBC@EasonWong"),
     "anubis-bypass": fetchMozilla("https://webextensions.andre4ik3.dev/updates.json").pipe(addon("anubis-bypass@andre4ik3.dev")),
@@ -84,6 +88,7 @@ export default {
     "noscript": fetchAMO("firefox", "{73a6fe31-595d-460b-a920-fcc0f8843232}"),
     "obsidian-web-clipper": fetchAMO("firefox", "clipper@obsidian.md"),
     "plasma-integration": fetchAMO("firefox", "plasma-browser-integration@kde.org"),
+    "port-authority": fetchAMO("firefox", "{6c00218c-707a-4977-84cf-36df1cef310f}"),
     "privacy-badger": fetchAMO("firefox", "jid1-MnnxcxisBPnSXQ@jetpack"),
     "privacy-pass": fetchAMO("firefox", "{48748554-4c01-49e8-94af-79662bf34d50}"),
     "react-devtools": fetchAMO("firefox", "@react-devtools"),
@@ -108,8 +113,10 @@ export default {
     "vuejs-devtools": fetchAMO("firefox", "{5caff8cc-3d2e-4110-a88a-003cc85b3858}"),
     "web-archives": fetchAMO("firefox", "{d07ccf11-c0cd-4938-a265-2a4d6ad01189}"),
     "zotero-connector": fetchMozilla("https://www.zotero.org/download/connector/firefox/release/updates.json").pipe(addon("zotero@chnm.gmu.edu")),
+    // keep-sorted end
   },
   thunderbird: {
+    // keep-sorted start block=yes
     "cardbook": fetchAMO("thunderbird", "cardbook@vigneau.philippe"),
     "conversations": fetchAMO("thunderbird", "gconversation@xulforum.org"),
     "extract-em": fetchAMO("thunderbird", "extractem@tmccoid.tech"),
@@ -118,8 +125,10 @@ export default {
     "minimize-on-close": fetchAMO("thunderbird", "minimizeonclose@rsjtdrjgfuzkfg.com"),
     "quicktext": fetchAMO("thunderbird", "{8845e3b3-e8fb-40e2-95e9-ec40294818c4}"),
     "send-later": fetchAMO("thunderbird", "sendlater3@kamens.us"),
+    // keep-sorted end
   },
   zotero: {
+    // keep-sorted start block=yes
     "attachment-scanner": fetchGitHub({
       owner: "SciImage",
       repo: "zotero-attachment-scanner",
@@ -160,5 +169,7 @@ export default {
       repo: "scite-zotero-plugin",
       id: "scite-zotero-plugin@scite.ai",
     }),
+    // keep-sorted end
   },
+  // keep-sorted end
 };

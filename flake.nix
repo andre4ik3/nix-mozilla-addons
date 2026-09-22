@@ -9,14 +9,19 @@
       url = "github:andre4ik3/nix-browser-addons/data";
       flake = false;
     };
+
+    treefmt = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, data, ... }: let
+  outputs = { self, nixpkgs, data, ... }@inputs: let
     inherit (nixpkgs) lib;
     systems = lib.systems.flakeExposed;
     devSystems = [ "aarch64-darwin" "aarch64-linux" "x86_64-darwin" "x86_64-linux" ];
     eachSystem = systems: f: lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
-    sortedFiles = [ "addons.json5" "updater/extras.py" ];
+    treefmt = pkgs: (inputs.treefmt.lib.evalModule pkgs ./treefmt.nix);
   in
   {
     lib.supportedSystems = systems;
@@ -41,20 +46,9 @@
       };
     });
 
-    formatter = eachSystem devSystems (pkgs: pkgs.writeShellScriptBin "formatter" ''
-      while [ ! -e "flake.nix" ]; do
-        cd ..
-        [ "$PWD" = "/" ] && exit 1
-      done
-      exec "${lib.getExe pkgs.keep-sorted}" "$@" ${lib.escapeShellArgs sortedFiles}
-    '');
-
+    formatter = eachSystem devSystems (pkgs: (treefmt pkgs).config.build.wrapper);
     checks = eachSystem devSystems (pkgs: {
-      keep-sorted = pkgs.runCommand "formatter" { buildInputs = [ pkgs.keep-sorted ]; } ''
-        cd "${self.outPath}"
-        keep-sorted --mode lint ${lib.escapeShellArgs sortedFiles}
-        touch "$out"
-      '';
+      treefmt = (treefmt pkgs).config.build.check self;
     });
   };
 }

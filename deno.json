@@ -2,7 +2,6 @@
   "tasks": {
   },
   "imports": {
-    "@effect/platform-deno": "npm:@effect/platform-deno@4.0.0-beta.104",
     "@effect/platform-node": "npm:@effect/platform-node@4.0.0-beta.107",
     "@std/encoding": "jsr:@std/encoding@^1.0.11",
     "@std/xml": "jsr:@std/xml@^0.2.0",
