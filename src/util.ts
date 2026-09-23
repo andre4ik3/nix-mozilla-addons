@@ -97,3 +97,17 @@ export const digestToSRI = (hash: string) => {
 
 export const addon = (id: string) =>
   Effect.map((r: Result.Result<Record<string, Result.Result<Addon, Error>>, Error>) => Result.flatMap(r, (r) => r[id]));
+
+export const stableStringify = (value: unknown) =>
+  JSON.stringify(value, (_key, val) => {
+    if (val && typeof val === "object" && !Array.isArray(val)) {
+      return Object.keys(val)
+        .sort()
+        .reduce<Record<string, unknown>>((obj, key) => {
+          obj[key] = val[key];
+          return obj;
+        }, {});
+    }
+
+    return val;
+  });

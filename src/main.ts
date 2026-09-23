@@ -4,7 +4,7 @@ import { Argument, Command, Flag } from "effect/unstable/cli";
 import { NodeServices } from "@effect/platform-node";
 
 import addons from "./addons.ts";
-import { Addon, parseJSON } from "./util.ts";
+import { Addon, parseJSON, stableStringify } from "./util.ts";
 
 const command = Command.make("nix-browser-addons-generator", {
   output: Argument.Path("output", { pathType: "directory" }),
@@ -46,7 +46,7 @@ const command = Command.make("nix-browser-addons-generator", {
       }
 
       const finalAddons = { ...base, ...Object.fromEntries(goodAddons) };
-      yield* fs.writeFileString(file, JSON.stringify(finalAddons));
+      yield* fs.writeFileString(file, stableStringify(finalAddons));
     }
   }));
 
